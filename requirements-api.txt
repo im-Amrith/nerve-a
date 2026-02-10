@@ -1,0 +1,30 @@
+# FastAPI Backend Dependencies
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+
+# Pydantic for data validation
+pydantic>=2.0.0
+
+# Core AI/LLM
+groq>=0.4.0
+langgraph>=0.2.0,<1.0.0
+langchain>=0.3.0,<1.0.0
+langchain-core>=0.3.0,<1.0.0
+langchain-groq>=0.1.0,<1.0.0
+
+# Trading & Market Data
+yfinance>=0.2.36
+pandas>=2.0.0,<2.3.0
+pandas-ta>=0.3.14b
+numpy>=1.24.0,<2.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+python-dateutil>=2.8.2
+pytz>=2023.3
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Vector DB (optional for RAG)
+# pinecone-client>=3.0.0

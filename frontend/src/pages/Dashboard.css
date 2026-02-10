@@ -1378,6 +1378,23 @@
   margin: 0;
 }
 
+.market-context-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.market-context-details p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.market-context-details p strong {
+  color: #5bbfb0;
+  margin-right: 0.5rem;
+}
+
 .autopsy-card ul {
   list-style: none;
   padding: 0;

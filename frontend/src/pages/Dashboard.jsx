@@ -28,7 +28,7 @@ import {
 import axios from 'axios'
 import './Dashboard.css'
 
-const API_BASE = 'http://localhost:8003/api'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8003/api'
 
 // Sidebar Navigation
 function Sidebar({ activeTab, setActiveTab }) {
@@ -492,7 +492,16 @@ function JournalPanel() {
                   <Activity size={16} />
                   <h4>Market Context</h4>
                 </div>
-                <p>{result.autopsy.market_context}</p>
+                {typeof result.autopsy.market_context === 'object' ? (
+                  <div className="market-context-details">
+                    {result.autopsy.market_context.summary && <p><strong>Summary:</strong> {result.autopsy.market_context.summary}</p>}
+                    {result.autopsy.market_context.market_sentiment && <p><strong>Sentiment:</strong> {result.autopsy.market_context.market_sentiment}</p>}
+                    {result.autopsy.market_context.industry_trend && <p><strong>Industry:</strong> {result.autopsy.market_context.industry_trend}</p>}
+                    {result.autopsy.market_context.macroeconomic_factors && <p><strong>Macro:</strong> {result.autopsy.market_context.macroeconomic_factors}</p>}
+                  </div>
+                ) : (
+                  <p>{result.autopsy.market_context}</p>
+                )}
               </div>
 
               <div className="autopsy-card">
@@ -500,7 +509,9 @@ function JournalPanel() {
                   <Brain size={16} />
                   <h4>Analysis</h4>
                 </div>
-                <p>{result.autopsy.analysis}</p>
+                <p>{typeof result.autopsy.analysis === 'object'
+                  ? JSON.stringify(result.autopsy.analysis)
+                  : result.autopsy.analysis}</p>
               </div>
 
               {result.autopsy.lessons_learned && result.autopsy.lessons_learned.length > 0 && (

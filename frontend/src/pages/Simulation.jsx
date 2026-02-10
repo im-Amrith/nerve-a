@@ -31,7 +31,7 @@ import {
 import axios from 'axios'
 import './Simulation.css'
 
-const API_BASE = 'http://localhost:8003/api'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8003/api'
 
 // Sidebar Navigation
 function Sidebar({ activeTab, setActiveTab }) {
