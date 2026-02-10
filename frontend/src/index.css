@@ -1,0 +1,48 @@
+/* CSS Reset and Base Styles */
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: #050608;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: #5bbfb0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #7cd4c5;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #050608;
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:focus {
+  outline: 2px solid rgba(91, 191, 176, 0.4);
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(91, 191, 176, 0.25);
+  color: white;
+}
