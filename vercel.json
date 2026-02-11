@@ -6,22 +6,5 @@
   "installCommand": "cd frontend && npm install",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "ignore": [
-    "src/**",
-    "api/**",
-    "demos/**",
-    "tests/**",
-    "data/**",
-    "logs/**",
-    "screenshots/**",
-    "config/**",
-    "docs/**",
-    ".venv/**",
-    "venv/**",
-    "*.py",
-    "*.md",
-    "Dockerfile",
-    "requirements*.txt"
   ]
 }

@@ -1,3 +1,14 @@
+---
+title: Nerve - Agentic Brokerage OS
+emoji: 🧠
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+python_version: "3.11"
+app_file: api/main.py
+pinned: false
+---
+
 # Agentic Brokerage OS
 
 An intelligence-first brokerage layer that governs trading through autonomous AI agents.
