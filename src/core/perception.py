@@ -1,19 +1,62 @@
 """
 Perception Engine: Computer Vision + Groq VLM for UI understanding.
 Implements the "Screen-to-JSON" coordinate mapping without fragile DOM selectors.
+
+NOTE: This module requires desktop GUI capabilities (PIL ImageGrab).
+It will not work on headless Linux servers.
 """
+
+from __future__ import annotations
 
 import base64
 import hashlib
 import time
 from io import BytesIO
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any, TYPE_CHECKING
 from datetime import datetime
 
-import cv2
-import numpy as np
-from PIL import Image, ImageGrab
-from groq import Groq
+# Type checking imports (not evaluated at runtime)
+if TYPE_CHECKING:
+    from PIL import Image as PILImage
+    import numpy as np
+
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    cv2 = None
+    CV2_AVAILABLE = False
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    np = None
+    NUMPY_AVAILABLE = False
+
+# PIL imports with graceful fallback for headless servers
+try:
+    from PIL import Image
+    PIL_AVAILABLE = True
+except ImportError:
+    Image = None
+    PIL_AVAILABLE = False
+
+try:
+    from PIL import ImageGrab
+    IMAGEGRAB_AVAILABLE = True
+except (ImportError, OSError):
+    # ImageGrab not available on headless Linux
+    ImageGrab = None
+    IMAGEGRAB_AVAILABLE = False
+
+try:
+    from groq import Groq
+    GROQ_AVAILABLE = True
+except ImportError:
+    Groq = None
+    GROQ_AVAILABLE = False
+
 from loguru import logger
 
 from ..core.state import UIElement, PerceptionResult
@@ -26,14 +69,23 @@ class PerceptionEngine:
     2. Computer vision preprocessing
     3. Groq VLM for semantic understanding
     4. Coordinate mapping for action execution
+    
+    NOTE: Requires desktop environment. Not available on headless servers.
     """
     
     def __init__(self, groq_api_key: str, model: str = "llama-3.2-90b-vision-preview"):
+        if not GROQ_AVAILABLE:
+            raise RuntimeError("Groq client not available. Install groq package.")
+        if not IMAGEGRAB_AVAILABLE:
+            raise RuntimeError(
+                "PerceptionEngine requires desktop GUI capabilities (PIL ImageGrab). "
+                "This is not available on headless Linux servers."
+            )
         self.client = Groq(api_key=groq_api_key)
         self.model = model
         self.last_ui_hash = None
         
-    def capture_screen(self, bbox: Optional[Tuple[int, int, int, int]] = None) -> Image.Image:
+    def capture_screen(self, bbox: Optional[Tuple[int, int, int, int]] = None) -> Any:
         """
         Capture screenshot of the trading interface.
         
@@ -51,7 +103,7 @@ class PerceptionEngine:
             logger.error(f"Screenshot capture failed: {e}")
             raise
     
-    def preprocess_image(self, image: Image.Image) -> Tuple[Image.Image, np.ndarray]:
+    def preprocess_image(self, image: Any) -> Tuple[Any, Any]:
         """
         Preprocess image for better VLM and CV analysis.
         
@@ -75,7 +127,7 @@ class PerceptionEngine:
         
         return enhanced_pil, img_cv
     
-    def detect_ui_elements_cv(self, image_cv: np.ndarray) -> List[Dict]:
+    def detect_ui_elements_cv(self, image_cv: Any) -> List[Dict]:
         """
         Use computer vision to detect UI elements (buttons, inputs, etc.).
         This provides fast, deterministic bounding boxes.
@@ -125,13 +177,13 @@ class PerceptionEngine:
         logger.info(f"Detected {len(elements)} UI elements via CV")
         return elements
     
-    def encode_image_base64(self, image: Image.Image) -> str:
+    def encode_image_base64(self, image: Any) -> str:
         """Convert PIL Image to base64 for Groq API."""
         buffered = BytesIO()
         image.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode('utf-8')
     
-    def analyze_with_vlm(self, image: Image.Image, cv_elements: List[Dict]) -> Dict:
+    def analyze_with_vlm(self, image: Any, cv_elements: List[Dict]) -> Dict:
         """
         Use Groq VLM to semantically understand the UI and map elements.
         
@@ -246,7 +298,7 @@ Respond ONLY with valid JSON, no additional text."""
             logger.error(f"VLM analysis failed: {e}")
             raise
     
-    def compute_ui_hash(self, image: Image.Image) -> str:
+    def compute_ui_hash(self, image: Any) -> str:
         """
         Compute hash of UI layout for change detection.
         Uses perceptual hashing to detect meaningful UI changes.
