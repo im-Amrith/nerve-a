@@ -1,59 +1,24 @@
-# Virtual environments
-.venv/
-venv/
-env/
-ENV/
-
-# Python cache
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-*.egg
-.eggs/
-
-# Python source - Vercel is for frontend only
-src/
-api/
-demos/
-tests/
-*.py
-requirements*.txt
+# Exclude Python backend and non-frontend files from Vercel
+.venv
+venv
+__pycache__
+*.pyc
+api
+demos
+tests
+logs
+data
+screenshots
+config
+docs
 Dockerfile
-run_api.bat
-run_dashboard.bat
-run_dashboard.sh
-
-# IDE and config
-.vscode/
-.idea/
-*.swp
-*.swo
-.git/
-
-# Logs and data
-logs/
-data/
-screenshots/
-config/
-
-# Documentation (not needed in deployment)
-*.md
-docs/
-
-# Development files
+*.bat
+*.sh
+dashboard.py
+setup_validation.py
 .env
 .env.local
 .env.example
-setup_validation.py
-dashboard.py
 
-# Node modules (handled by Vercel build)
-node_modules/
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
+# Keep frontend/ folder explicitly included
+# Vercel builds from frontend/ directory
